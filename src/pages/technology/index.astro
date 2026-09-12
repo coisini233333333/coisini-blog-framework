@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { getPosts } from '../../lib/posts';
+const posts = (await getPosts()).filter((post) => post.data.category === 'technical');
+---
+
+<BaseLayout title="技术" section="technology">
+  <header class="page-heading">
+    <h1>技术</h1>
+    <p>论文阅读、方法理解与技术笔记。</p>
+  </header>
+  <PostList posts={posts} />
+</BaseLayout>

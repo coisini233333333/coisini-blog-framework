@@ -1,0 +1,13 @@
+{
+  "title": "一隅 · Astro 博客框架",
+  "author": "一隅",
+  "description": "技术笔记、项目记录，以及随笔。",
+  "subtitle": "博客",
+  "heroTitle": ["一隅", "个人博客"],
+  "github": "https://github.com/coisini233333333/coisini-blog-framework",
+  "heroImage": "/images/landscape.svg",
+  "heroImageAlt": "山峦与树木环绕湖泊的风景插图",
+  "avatarImage": "",
+  "about": "这里是博客框架的公开示例。复制内容包后，在 site.json 中写下你自己的介绍。",
+  "projectsDescription": "记录项目的目标、实现思路和进展。"
+}

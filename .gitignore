@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.npm-cache/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+.qa/
+.private/
+.publish/
+*.pem
+*.key

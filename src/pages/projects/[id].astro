@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { projects, type Project } from '../../data/projects';
+import { withBase } from '../../lib/paths';
+import { getPosts } from '../../lib/posts';
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { id: project.slug }, props: { project } }));
+}
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const note = (await getPosts()).find((post) => post.id === project.noteSlug);
+---
+
+<BaseLayout title={project.title} description={project.description} section="projects">
+  <div class="article-top">
+    <a class="text-link" href={withBase('/projects/')}>
+      ← 全部项目
+    </a>
+  </div>
+  <header class="article-heading project-heading">
+    <span class="project-status">{project.status}</span>
+    <h1>{project.title}</h1>
+    <p>{project.subtitle}</p>
+    <div class="project-tags">
+      {project.tags.map((tag) => (
+        <span>{tag}</span>
+      ))}
+    </div>
+  </header>
+  <section class="project-detail" aria-label={`${project.title} 项目介绍`}>
+    <div class="prose">
+      <h2>项目概述</h2>
+      <p>{project.overview}</p>
+      <h2>关注的问题</h2>
+      <ul>
+        {project.focus.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+      <h2>相关资料</h2>
+      <ul>
+        {project.references.map((reference) => (
+          <li>
+            <a href={reference.url} target="_blank" rel="noopener noreferrer">
+              {reference.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+    {note && (
+      <aside class="project-reading">
+        <h2>技术笔记</h2>
+        <a href={withBase(`/posts/${note.id}/`)}>
+          {note.data.title} <span aria-hidden="true">↗</span>
+        </a>
+        <p>{note.data.description}</p>
+      </aside>
+    )}
+  </section>
+</BaseLayout>

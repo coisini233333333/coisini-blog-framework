@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPosts, formatDate } from '../lib/posts';
+import { withBase } from '../lib/paths';
+const posts = await getPosts();
+const years = [...new Set(posts.map((post) => post.data.pubDate.getUTCFullYear()))];
+---
+
+<BaseLayout title="归档" section="archive">
+  <header class="page-heading">
+    <h1>文章归档</h1>
+    <p>共 {posts.length} 篇文章，按发布时间排列。</p>
+  </header>
+  <div class="archive-list">
+    {years.map((year) => (
+      <section class="archive-year">
+        <h2>
+          {year}
+          <span>
+            {posts.filter((post) => post.data.pubDate.getUTCFullYear() === year).length} 篇
+          </span>
+        </h2>
+        <ol>
+          {posts
+            .filter((post) => post.data.pubDate.getUTCFullYear() === year)
+            .map((post) => (
+              <li>
+                <time datetime={post.data.pubDate.toISOString()}>
+                  {formatDate(post.data.pubDate)}
+                </time>
+                <a href={withBase(`/posts/${post.id}/`)}>{post.data.title}</a>
+                <span class="archive-tag">{post.data.tags[0]}</span>
+                <span aria-hidden="true">↗</span>
+              </li>
+            ))}
+        </ol>
+      </section>
+    ))}
+    {!posts.length && <p class="empty-state">暂无文章。</p>}
+  </div>
+</BaseLayout>

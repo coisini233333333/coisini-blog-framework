@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { getPosts } from '../../lib/posts';
+const posts = (await getPosts()).filter((post) => post.data.category === 'essay');
+---
+
+<BaseLayout title="随笔" section="essays">
+  <header class="page-heading">
+    <h1>随笔</h1>
+  </header>
+  {posts.length > 0 ? (
+    <PostList posts={posts} />
+  ) : (
+    <section class="empty-state essay-empty" aria-label="随笔列表">
+      <p>暂无随笔。</p>
+    </section>
+  )}
+</BaseLayout>

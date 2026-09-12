@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/paths';
+---
+
+<BaseLayout title="页面不存在" noindex>
+  <section class="not-found">
+    <div class="error-number">
+      404<span>✳</span>
+    </div>
+    <h1>页面不存在</h1>
+    <p>请检查网址，或返回首页。</p>
+    <a class="button primary" href={withBase('/')}>
+      回到首页 →
+    </a>
+  </section>
+</BaseLayout>

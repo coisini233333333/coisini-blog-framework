@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+.npm-cache/
+.qa/
+.env
+.env.*
+package-lock.json
+examples/site/public/
+.private/
+.publish/

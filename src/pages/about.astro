@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { siteConfig } from '../config/site';
+import { withBase } from '../lib/paths';
+---
+
+<BaseLayout title="关于我" section="about">
+  <header class="page-heading">
+    <h1>关于</h1>
+  </header>
+  <section class="about-layout">
+    <aside class="profile-card">
+      {siteConfig.avatarImage ? (
+        <img
+          class="avatar"
+          src={withBase(siteConfig.avatarImage)}
+          alt={`${siteConfig.author}的头像`}
+          width="88"
+          height="88"
+        />
+      ) : (
+        <span class="avatar letter-avatar" aria-hidden="true">
+          {Array.from(siteConfig.author.trim())[0]?.toUpperCase() || 'C'}
+          <span>✳</span>
+        </span>
+      )}
+      <h2>{siteConfig.author}</h2>
+      <p>个人博客</p>
+      <div class="profile-line"></div>
+      <a
+        class="button secondary"
+        href={siteConfig.github}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Icon name="github" size={18} /> 在 GitHub 找到我
+      </a>
+    </aside>
+    <div class="prose about-copy">
+      <h2>{siteConfig.author}</h2>
+      <p>{siteConfig.about}</p>
+      <h2>博客内容</h2>
+      <ul>
+        <li>
+          <a href={withBase('/technology/')}>技术</a>：论文阅读、方法理解与实现笔记。
+        </li>
+        <li>
+          <a href={withBase('/projects/')}>项目</a>：研究方向、实现思路与相关资料。
+        </li>
+        <li>
+          <a href={withBase('/essays/')}>随笔</a>：独立于技术和项目的个人记录。
+        </li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

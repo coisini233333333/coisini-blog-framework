@@ -1,0 +1,19 @@
+[
+  {
+    "slug": "hello-project",
+    "title": "示例项目",
+    "subtitle": "从一个小项目开始",
+    "description": "展示项目列表、详情页与技术笔记之间的关联。",
+    "tags": ["Astro", "示例"],
+    "status": "示例",
+    "overview": "在内容包的 projects.json 中管理项目，无需修改页面组件。",
+    "focus": ["明确目标", "记录实现", "验证结果"],
+    "noteSlug": "hello-world",
+    "references": [
+      {
+        "label": "Astro 文档",
+        "url": "https://docs.astro.build/"
+      }
+    ]
+  }
+]

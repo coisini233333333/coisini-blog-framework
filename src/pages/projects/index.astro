@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projects } from '../../data/projects';
+import { siteConfig } from '../../config/site';
+---
+
+<BaseLayout title="项目" section="projects">
+  <header class="page-heading">
+    <h1>项目</h1>
+    <p>{siteConfig.projectsDescription}</p>
+  </header>
+  <section class="project-grid" aria-label="项目列表">
+    {projects.map((project) => (
+      <ProjectCard project={project} />
+    ))}
+  </section>
+</BaseLayout>

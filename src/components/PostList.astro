@@ -1,0 +1,87 @@
+---
+import PostCard from './PostCard.astro';
+import Icon from './Icon.astro';
+import { getTags, type BlogPost } from '../lib/posts';
+interface Props {
+  posts: BlogPost[];
+}
+const { posts } = Astro.props;
+const tags = getTags(posts);
+---
+
+<section aria-label="文章列表">
+  <div class="filter-bar" data-filters hidden>
+    <div class="tag-filters" role="group" aria-label="按标签筛选">
+      <button class="tag-button" type="button" data-tag="" aria-pressed="true">
+        全部
+      </button>
+      {tags.map((tag) => (
+        <button class="tag-button" type="button" data-tag={tag} aria-pressed="false">
+          {tag}
+        </button>
+      ))}
+    </div>
+    <label class="search-field">
+      <Icon name="search" size={19} />
+      <span class="sr-only">搜索文章标题、摘要或标签</span>
+      <input type="search" id="post-search" placeholder="寻找一篇笔记…" autocomplete="off" />
+    </label>
+  </div>
+  <p class="results-count" data-count aria-live="polite" aria-atomic="true">
+    共 {posts.length} 篇文章
+  </p>
+  <div class="post-grid">
+    {posts.map((post) => (
+      <PostCard post={post} />
+    ))}
+  </div>
+  <div class="empty-state" data-empty hidden>
+    <Icon name="search" size={30} />
+    <h2>暂时没找到这篇笔记</h2>
+    <p>换个关键词，或试试其他标签。</p>
+    <button class="button secondary" data-clear type="button">
+      清除筛选
+    </button>
+  </div>
+</section>
+<script>
+  const filterBar = document.querySelector<HTMLElement>('[data-filters]');
+  if (filterBar) filterBar.hidden = false;
+  const search = document.querySelector<HTMLInputElement>('#post-search');
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-tag]'));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-post]'));
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+  const count = document.querySelector<HTMLElement>('[data-count]');
+  let activeTag = '';
+  function filter() {
+    const query = (search?.value || '').trim().toLocaleLowerCase();
+    let total = 0;
+    cards.forEach((card) => {
+      const tags: string[] = JSON.parse(card.dataset.tags || '[]');
+      const text =
+        `${card.dataset.title} ${card.dataset.description} ${tags.join(' ')}`.toLocaleLowerCase();
+      const visible = (!activeTag || tags.includes(activeTag)) && (!query || text.includes(query));
+      card.hidden = !visible;
+      if (visible) total++;
+    });
+    buttons.forEach((button) =>
+      button.setAttribute('aria-pressed', String(button.dataset.tag === activeTag)),
+    );
+    if (count)
+      count.textContent = query || activeTag ? `找到 ${total} 篇文章` : `共 ${total} 篇文章`;
+    if (empty) empty.hidden = total !== 0;
+  }
+  buttons.forEach((button) =>
+    button.addEventListener('click', () => {
+      activeTag = button.dataset.tag || '';
+      filter();
+    }),
+  );
+  search?.addEventListener('input', filter);
+  document.querySelector('[data-clear]')?.addEventListener('click', () => {
+    activeTag = '';
+    if (search) search.value = '';
+    filter();
+    search?.focus();
+  });
+</script>

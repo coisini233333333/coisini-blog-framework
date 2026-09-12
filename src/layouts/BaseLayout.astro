@@ -1,0 +1,165 @@
+---
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+import { siteConfig } from '../config/site';
+import { withBase } from '../lib/paths';
+interface Props {
+  title?: string;
+  description?: string;
+  section?: string;
+  noindex?: boolean;
+}
+const { title, description = siteConfig.description, section = '', noindex = false } = Astro.props;
+const pageTitle = title ? `${title} · ${siteConfig.title}` : siteConfig.title;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const nav = [
+  { label: '首页', href: '/', key: 'home' },
+  { label: '随笔', href: '/essays/', key: 'essays' },
+  { label: '技术', href: '/technology/', key: 'technology' },
+  { label: '项目', href: '/projects/', key: 'projects' },
+  { label: '关于', href: '/about/', key: 'about' },
+];
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="author" content={siteConfig.author} />
+    <meta name="theme-color" content="#f7f7ef" />
+    <meta name="color-scheme" content="light dark" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={siteConfig.title}
+      href={withBase('/rss.xml')}
+    />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {!noindex && <meta property="og:url" content={canonical} />}
+    <meta property="og:locale" content="zh_CN" />
+    <title>{pageTitle}</title>
+    <script is:inline>
+      (() => {
+        let theme;
+        try {
+          theme = localStorage.getItem('theme');
+        } catch {}
+        const dark =
+          theme === 'dark' ||
+          (theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      跳到主要内容
+    </a>
+    <header class="site-header wrap">
+      <a class="brand" href={withBase('/')} aria-label={`${siteConfig.title}首页`}>
+        <span class="brand-symbol" aria-hidden="true">
+          <Icon name="leaf" size={25} />
+        </span>
+        <span>
+          {siteConfig.author}
+          <small>{siteConfig.subtitle}</small>
+        </span>
+      </a>
+      <div class="header-right">
+        <nav aria-label="主导航">
+          {nav.map((item) => (
+            <a href={withBase(item.href)} aria-current={section === item.key ? 'page' : undefined}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+        <span class="header-divider"></span>
+        <button
+          class="icon-button theme-toggle"
+          type="button"
+          data-theme-toggle
+          aria-label="切换深浅主题"
+          title="切换深浅主题"
+        >
+          <span class="sun-icon">
+            <Icon name="sun" />
+          </span>
+          <span class="moon-icon">
+            <Icon name="moon" />
+          </span>
+        </button>
+        {siteConfig.avatarImage && (
+          <a
+            class="header-avatar"
+            href={withBase('/about/')}
+            aria-label={`关于 ${siteConfig.author}`}
+          >
+            <img
+              src={withBase(siteConfig.avatarImage)}
+              alt={`${siteConfig.author}的头像`}
+              width="44"
+              height="44"
+            />
+          </a>
+        )}
+      </div>
+    </header>
+    <main id="main" class="wrap">
+      <slot />
+    </main>
+    <footer class="site-footer wrap">
+      <div>
+        <a class="footer-brand" href={withBase('/')}>
+          {siteConfig.author}
+        </a>
+        <a class="footer-note" href={withBase('/archive/')}>
+          文章归档
+        </a>
+      </div>
+      <div class="footer-right">
+        <span>
+          © {new Date().getFullYear()} {siteConfig.author}
+        </span>
+        <a href={withBase('/rss.xml')} aria-label="订阅 RSS" title="订阅 RSS">
+          <Icon name="rss" size={17} />
+        </a>
+        <a
+          href={siteConfig.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="访问 GitHub"
+          title="GitHub"
+        >
+          <Icon name="github" size={18} />
+        </a>
+      </div>
+    </footer>
+    <script>
+      const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+      const updateLabel = () => {
+        const dark = document.documentElement.dataset.theme === 'dark';
+        button?.setAttribute('aria-label', dark ? '切换到浅色主题' : '切换到深色主题');
+        button?.setAttribute('title', dark ? '切换到浅色主题' : '切换到深色主题');
+        document
+          .querySelector('meta[name="theme-color"]')
+          ?.setAttribute('content', dark ? '#171f1b' : '#f7f7ef');
+      };
+      updateLabel();
+      button?.addEventListener('click', () => {
+        const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = theme;
+        try {
+          localStorage.setItem('theme', theme);
+        } catch {}
+        updateLabel();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+---
+import type { BlogPost } from '../lib/posts';
+import { formatDate, readingTime } from '../lib/posts';
+import { withBase } from '../lib/paths';
+import PostArt from './PostArt.astro';
+import Icon from './Icon.astro';
+interface Props {
+  post: BlogPost;
+}
+const { post } = Astro.props;
+---
+
+<article
+  class="post-card"
+  data-post
+  data-title={post.data.title}
+  data-description={post.data.description}
+  data-tags={JSON.stringify(post.data.tags)}
+>
+  <a class="post-cover" href={withBase(`/posts/${post.id}/`)} tabindex="-1" aria-hidden="true">
+    {post.data.cover ? (
+      <img src={withBase(post.data.cover)} alt="" width="640" height="400" loading="lazy" />
+    ) : (
+      <PostArt kind={post.data.art} />
+    )}
+    {post.data.sample && <span class="sample-badge">示例文章</span>}
+  </a>
+  <div class="post-card-body">
+    <div class="post-meta">
+      <span>{post.data.tags[0] || '随笔'}</span>
+      <span class="meta-dot">·</span>
+      <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+    </div>
+    <h3>
+      <a href={withBase(`/posts/${post.id}/`)}>{post.data.title}</a>
+    </h3>
+    <p>{post.data.description}</p>
+    <div class="card-bottom">
+      <span>约 {readingTime(post.body || '')} 分钟阅读</span>
+      <a href={withBase(`/posts/${post.id}/`)} aria-label={`阅读：${post.data.title}`}>
+        <Icon name="arrow" size={19} />
+      </a>
+    </div>
+  </div>
+</article>
