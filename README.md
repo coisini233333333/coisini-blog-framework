@@ -2,7 +2,7 @@
 
 一个可复用的 Astro 静态博客框架：浅米白与灰绿配色、深浅主题切换、随笔、技术笔记、项目展示、文章目录、搜索筛选、归档、RSS 与 sitemap。使用 **Astro 7 + TypeScript + 原生 CSS + Markdown**，不需要数据库、后台服务或浏览器 API 密钥。
 
-[实际站点：Coisini 博客](https://coisini233333333.github.io/coisini-blog-framework/) · [框架构建状态](https://github.com/coisini233333333/coisini-blog-framework/actions/workflows/ci.yml)
+[实际站点：Coisini 博客](https://coisini2333.com/) · [框架构建状态](https://github.com/coisini233333333/coisini-blog-framework/actions/workflows/ci.yml)
 
 **公开框架，私有写作。** 框架仓库只包含组件、样式、构建脚本和虚构示例。你自己的站点配置、项目资料、文章和图片放在独立内容包，构建时读取，发布时只上传静态网页。
 
