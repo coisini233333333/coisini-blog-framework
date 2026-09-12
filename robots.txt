@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://coisini233333333.github.io/coisini-blog-framework/sitemap-index.xml
+Sitemap: https://coisini2333.com/sitemap-index.xml
