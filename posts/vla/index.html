@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Mobile GUI-VLA 进展：人工监督的操作闭环、混合历史、中文输入实验与 Accessibility 观察层。"><meta name="author" content="Coisini"><meta name="theme-color" content="#f7f7ef"><meta name="color-scheme" content="light dark"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="canonical" href="https://coisini2333.com/posts/vla/"><link rel="alternate" type="application/rss+xml" title="Coisini · 一隅" href="/rss.xml"><meta property="og:title" content="VLA：Android 界面交互闭环 · Coisini · 一隅"><meta property="og:description" content="Mobile GUI-VLA 进展：人工监督的操作闭环、混合历史、中文输入实验与 Accessibility 观察层。"><meta property="og:type" content="website"><meta property="og:url" content="https://coisini2333.com/posts/vla/"><meta property="og:locale" content="zh_CN"><title>VLA：Android 界面交互闭环 · Coisini · 一隅</title><script>
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="关于 Mobile GUI-VLA：从任务和截图出发，在真实 Android 环境中完成可回放、可评估的交互闭环。"><meta name="author" content="Coisini"><meta name="theme-color" content="#f7f7ef"><meta name="color-scheme" content="light dark"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="canonical" href="https://coisini2333.com/posts/vla/"><link rel="alternate" type="application/rss+xml" title="Coisini · 一隅" href="/rss.xml"><meta property="og:title" content="VLA：Android 界面交互闭环 · Coisini · 一隅"><meta property="og:description" content="关于 Mobile GUI-VLA：从任务和截图出发，在真实 Android 环境中完成可回放、可评估的交互闭环。"><meta property="og:type" content="website"><meta property="og:url" content="https://coisini2333.com/posts/vla/"><meta property="og:locale" content="zh_CN"><title>VLA：Android 界面交互闭环 · Coisini · 一隅</title><script>
       (() => {
         let theme;
         try {
@@ -9,107 +9,19 @@
           (theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
       })();
-    </script><link rel="stylesheet" href="/_astro/BaseLayout.xvzBNshe.css"></head><body><a class="skip-link" href="#main">跳到主要内容</a><header class="site-header wrap"><a class="brand" href="/" aria-label="Coisini · 一隅首页"><span class="brand-symbol" aria-hidden="true"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4C9 2 3 8 6 16c8 3 14-1 14-12Z"></path><path d="m4 21 11-12"></path></svg></span><span>Coisini<small>一隅</small></span></a><div class="header-right"><nav aria-label="主导航"><a href="/">首页</a><a href="/essays/">随笔</a><a href="/technology/" aria-current="page">技术</a><a href="/projects/">项目</a><a href="/about/">关于</a></nav><span class="header-divider"></span><button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="切换深浅主题" title="切换深浅主题"><span class="sun-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"></path></svg></span><span class="moon-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.1A8.8 8.8 0 0 1 9.9 3.5a8.8 8.8 0 1 0 10.6 10.6Z"></path></svg></span></button><a class="header-avatar" href="/about/" aria-label="关于 Coisini"><img src="/images/avatar.jpg" alt="Coisini的头像" width="44" height="44"></a></div></header><main id="main" class="wrap"><div class="article-top"><a class="text-link" href="/technology/">← 技术笔记</a></div><header class="article-heading"><div class="article-tags"><span>VLA</span><span>GUI</span><span>多模态</span><span>computer use</span></div><h1>VLA：Android 界面交互闭环</h1><p>Mobile GUI-VLA 进展：人工监督的操作闭环、混合历史、中文输入实验与 Accessibility 观察层。</p><div class="article-meta"><span>Coisini</span><span>·</span><time datetime="2026-09-12T00:00:00.000Z">2026年9月12日</time><span>·</span><span>约 10 分钟</span></div><p class="updated-date">更新于 2026年9月19日</p></header><div class="article-layout"><article class="prose"><h2 id="项目方向">项目方向</h2>
-<p>如你所见，这是一个基于多模态模型的 Mobile GUI-VLA 项目。这里的 VLA 面向手机界面：模型读到自然语言任务和当前截图，判断下一步应做什么，再把结构化动作交给设备执行。</p>
-<p>目前项目已经从最初的截图、点击循环，推进到人工监督的模型操作、错误纠正、轨迹记录和独立观察实验。下面按本机项目截至 2026 年 9 月 19 日的代码与记录整理进展；已实现的接口、实机观察和待验证的研究效果分别说明。</p>
-<h2 id="从截图到可追溯的动作">从截图到可追溯的动作</h2>
-<p>当前主要使用 Qwen3-VL-8B-Instruct，网页采集端选用带混合历史能力的 r4 harness。这里的 harness 指模型周围的工程链路：如何组织任务与历史、约定动作格式、解析输出、转换坐标，以及保存每一步的来源。</p>
-<p>各层分工已经比较明确：</p>
-<table>
-<thead>
-<tr>
-<th>层次</th>
-<th>当前职责</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Baseline / Harness</td>
-<td>构造模型输入、解析结构化提案、处理坐标与模型历史</td>
-</tr>
-<tr>
-<td>Platform</td>
-<td>获取设备画面、校验和执行动作、保存原始轨迹</td>
-</tr>
-<tr>
-<td>Data Lab</td>
-<td>提供网页预览、人工审核、纠正与接管，并单独保存标注</td>
-</tr>
-</tbody>
-</table>
-<p>一次交互的主要过程是：</p>
-<ol>
-<li>输入任务和约束，采集当前截图。</li>
-<li>模型根据任务、画面和可用历史生成动作提案。</li>
-<li>操作者查看目标位置，决定执行、拒绝并补充指导，或者接管。</li>
-<li>执行后进行有次数上限的画面稳定性采样，再记录下一帧。</li>
-<li>将这一轮的动作、来源和结果带入后续交互。</li>
-</ol>
-<p>当前模型侧仍是冻结的五动作协议；网页里的人工输入与 Home 控制，不能直接当成模型已经具备的动作能力。即使启用连续提议模式，每一步执行也仍需要新的人工决定。</p>
-<p>为避免模型对着旧画面操作，提案绑定截图的 Frame ID、SHA 和尺寸。任务或人工指导改变时，即使截图像素没有变化，原提案也可能失效。新增的统一客户端只调用 Data Lab 的提议接口，复用现有 harness，不另写一套提示词、坐标转换或 ADB 执行器；这个客户端目前通过了离线令牌检查，尚未完成新的实机会话验证。</p>
-<h2 id="人工纠正与混合历史">人工纠正与混合历史</h2>
-<p>项目现在关注的不只是模型自己连续做对多少步，还包括做错以后能否继续。</p>
-<p>错误发生前，可以拒绝提案并给出指导；错误发生后，可以人工接管、完成必要的恢复，再把控制交回模型。支持相应能力的 harness 会把模型动作、人工指导和人工恢复段组织成带来源的混合历史。标为“仅标注”的文字不会进入模型上下文。</p>
-<p>恢复链路还要检查接管段是否结束、最新画面是否稳定、上下文是否过期，以及选中的模型配置是否明确支持这种继续方式。这样才能知道后续结果究竟来自模型自身判断，还是人工提供了关键帮助。</p>
-<h2 id="accessibility-观察层从像素补充到控件结构">Accessibility 观察层：从像素补充到控件结构</h2>
-<p>最近新增了一条独立的只读观察路径：通过 Android 的 UI Automator 获取 UI 节点树，转成结构化 JSON，再让模型分析控件。节点可以包含文字、描述、资源 ID、边界、父子关系，以及是否聚焦、可点击或可滚动等属性。</p>
-<p>它提供的是界面结构信息，不是 App 的业务 API，也不是对截图做 OCR。字段缺失时保留未知状态；节点 ID 只对应当前快照，不能跨帧当作固定的操作句柄。当前最多向模型提供 150 个筛选后的节点，并明确记录是否截断。</p>
-<p>这里有两个不同阶段：个人原型尝试了截图前后检查与节点树结合；提取出的 beta 模块只消费人工审阅过的节点快照，做纯树分析，不带截图，也不执行手机动作。<strong>观察层尚未接入默认的 r4 控制流程。</strong></p>
-<p>前序原型已经暴露出一些很具体的问题：</p>
-<ul>
-<li>在计算器上获得了 55 个节点，模型能够定位数字 6，但也误读过 clickable 和文本字段。人工独立核验后的单次点击成功，不能等同于自动执行能力已经验证。</li>
-<li>点击后截图出现数字 6，输入区域的节点文本却仍为空，说明节点树并不完整代表视觉状态。</li>
-<li>美团首页的动态画面会阻断严格的图树一致性检查；节点文本过长也曾使请求超过上下文预算。</li>
-</ul>
-<p>这些观察说明结构化信息值得继续研究，但还不能据此宣称比纯视觉更快、更省 token，或者已经适配多个 App。后续需要在相同页面、任务与模型条件下做对照，并同时记录字段误读和图树冲突。</p>
-<h2 id="中文输入完成了一次受监督实验">中文输入：完成了一次受监督实验</h2>
-<p>独立搜索词桥接已经在真实手机的美团搜索框中输入过模型生成的“火锅”。文字读回和截图经人工核验一致，实验停在搜索建议页，没有点击搜索。</p>
-<p>这一链路只让模型根据目标提议输入文字；搜索框定位、焦点检查和执行批准由操作者负责。中文输入通过临时启用的输入法桥接完成，测试后恢复原输入法。</p>
-<p>一个值得保留的失败细节是：输入后清除按钮出现，导致输入框边界变化，自动核验仍然停在 UNVERIFIED_STOP。后续人工核验单独记录，没有覆盖原始失败状态。因此，这次结果是“受监督文字输入经人工确认成功”，不是自主搜索成功，也不是默认网页已经接入第六种模型动作。</p>
-<h2 id="任务评估与训练数据">任务评估与训练数据</h2>
-<p>评估时不只看模型执行任务的成功率，提高准确率所用的 token、消耗的时间、危险操作的终止，以及人工介入的次数和位置，都需要一起考虑。</p>
-<p>接下来主要围绕这些问题组织评估：</p>
-<table>
-<thead>
-<tr>
-<th>维度</th>
-<th>需要记录什么</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>任务完成</td>
-<td>success、partial、failure、abort 与环境阻塞分开统计</td>
-</tr>
-<tr>
-<td>交互成本</td>
-<td>模型请求和端到端耗时、输入输出 token、执行步数</td>
-</tr>
-<tr>
-<td>人工依赖</td>
-<td>拒绝提案、补充指导、接管与交回控制的次数和位置</td>
-</tr>
-<tr>
-<td>观察可靠性</td>
-<td>控件覆盖、字段误读、虚构节点、图树冲突和截断</td>
-</tr>
-<tr>
-<td>停止行为</td>
-<td>旧帧、失效上下文、权限或风险边界出现时是否停止</td>
-</tr>
-</tbody>
-</table>
-<p>轨迹能够保存，并不代表已经取得训练资格。模型生成动作仍保留 model 来源，用户亲自纠正保留 human 来源，助手生成的建议也不能冒充人工专家示范。当前 r4 的正式采集准入仍关闭；观察 beta 和独立输入实验也不直接产生正式 SFT 样本。</p>
-<p>项目另有一个冻结的机器样本小集合和独立 LoRA SFT 工程入口，用于准备训练链路验证。它尚不能支持训练效果结论：开发验证数据曾在探索中出现，不能当作独立最终测试集；目标多卡环境的训练、权重重载与恢复也仍需实测。</p>
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.xvzBNshe.css"></head><body><a class="skip-link" href="#main">跳到主要内容</a><header class="site-header wrap"><a class="brand" href="/" aria-label="Coisini · 一隅首页"><span class="brand-symbol" aria-hidden="true"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4C9 2 3 8 6 16c8 3 14-1 14-12Z"></path><path d="m4 21 11-12"></path></svg></span><span>Coisini<small>一隅</small></span></a><div class="header-right"><nav aria-label="主导航"><a href="/">首页</a><a href="/essays/">随笔</a><a href="/technology/" aria-current="page">技术</a><a href="/projects/">项目</a><a href="/about/">关于</a></nav><span class="header-divider"></span><button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="切换深浅主题" title="切换深浅主题"><span class="sun-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"></path></svg></span><span class="moon-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.1A8.8 8.8 0 0 1 9.9 3.5a8.8 8.8 0 1 0 10.6 10.6Z"></path></svg></span></button><a class="header-avatar" href="/about/" aria-label="关于 Coisini"><img src="/images/avatar.jpg" alt="Coisini的头像" width="44" height="44"></a></div></header><main id="main" class="wrap"><div class="article-top"><a class="text-link" href="/technology/">← 技术笔记</a></div><header class="article-heading"><div class="article-tags"><span>VLA</span><span>GUI</span><span>多模态</span><span>computer use</span></div><h1>VLA：Android 界面交互闭环</h1><p>关于 Mobile GUI-VLA：从任务和截图出发，在真实 Android 环境中完成可回放、可评估的交互闭环。</p><div class="article-meta"><span>Coisini</span><span>·</span><time datetime="2026-09-12T00:00:00.000Z">2026年9月12日</time><span>·</span><span>约 4 分钟</span></div></header><div class="article-layout"><article class="prose"><h2 id="项目方向">项目方向</h2>
+<p>如你所见，这是一个基于多模态模型的Mobile GUI-VLA 项目。这里的 VLA 并不是让机器人抓取物体的那一类视觉—语言—动作系统；它关注的是手机屏幕：模型读到自然语言任务和当前截图，判断下一步应做什么，再把动作交给设备执行。</p>
+<h2 id="从理解屏幕到动作执行">从理解屏幕到动作执行</h2>
+<p>可以把一次交互理解为一条短循环：任务描述与截图进入策略，策略输出结构化动作，例如点击、滑动、输入、返回或等待；设备执行后产生新截图，下一轮再据此决策。真正困难的地方不只是“会不会回答”，而是把语言中的目标可靠地落到具体界面元素和坐标上。研究中通常把这项能力称为 GUI grounding：模型需要在视觉界面里定位正确的控件，并理解当前页面状态是否允许执行该动作。当然，活干到一半gpt6横空出世，去看了看computer use实现方式，发现有更高效的让模型理解屏幕的方式，于是马上更新了相关的harness，虽然现在还有点小屎，但相比单纯的截屏交给模型理解有了切实的效率提高，还是得抬头看路.jpg，同时感觉豆包手机或许真的能王朝呢？</p>
+<h2 id="任务评估">任务评估</h2>
+<p>评估也不能只看模型输出是否“像对的”。任务是否完成、一次交互耗时多久，以及不确定时是否能安全停止，都应该与轨迹一起记录。AndroidWorld 提供了带初始化、成功检查和清理逻辑的真实 Android 任务环境；OSWorld 的结果也提醒我们，真实计算机界面中的视觉定位与操作知识仍是多模态 agent 的主要难点。因此，这个方向更像是在把一个可观察、可复现实验系统先搭稳，再让数据和评估引导模型改进。
+——上面是AI的总结，大体来说，评估时不只看模型执行任务的成功率，提高准确率所用的token，消耗的时间，危险操作的终止都是需要考虑的</p>
 <h2 id="一些闲话">一些闲话</h2>
 <p>本来项目准备用纯视觉判断手机的方案，但一方面这个方法的响应速度令人发指，一方面gpt的computer use功能效果太好了，出于好奇去看了技术文档，发现他们的方案复用了很早就存在的accessibility api，最初用于造福视障人士的技术在AI时代却焕发了新的光彩，令人有些莫名的感慨，也许技术的发展从不依赖于特定方向的进步，就像出于游戏用途的gpu后来被用于并行计算，解决图像渲染的流体算法在仿真领域也有作用，也许某年某日我之前造出的屎山也有了它的作用呢，回首这个项目，其实也有了不小的进展，最早模型只能做出简单的点击功能，随着对harness的不断升级，我终于可以吃到模型给我点的窑鸡，希望在项目结束时，模型可以以更高效的方式，自如的用着不同的app处理事务</p>
-<blockquote>
-<p>技术补充：上面的使用体验与感想保留个人视角。本文关于 Accessibility 的实现和验证范围，以“Accessibility 观察层”一节为准；不将个人体验作为其他产品内部实现或性能收益的证据。</p>
-</blockquote>
 <h2 id="参考">参考</h2>
 <ul>
 <li><a href="https://arxiv.org/abs/2401.10935">SeeClick：面向视觉 GUI agent 的界面定位研究</a></li>
 <li><a href="https://arxiv.org/abs/2405.14573">AndroidWorld：动态 Android 任务评测环境</a></li>
 <li><a href="https://arxiv.org/abs/2404.07972">OSWorld：真实计算机环境中的多模态 agent 评测</a></li>
 </ul>
-</article><aside class="article-toc"><nav aria-label="文章目录"><p>目录</p><ol><li><a href="#项目方向">项目方向</a></li><li><a href="#从截图到可追溯的动作">从截图到可追溯的动作</a></li><li><a href="#人工纠正与混合历史">人工纠正与混合历史</a></li><li><a href="#accessibility-观察层从像素补充到控件结构">Accessibility 观察层：从像素补充到控件结构</a></li><li><a href="#中文输入完成了一次受监督实验">中文输入：完成了一次受监督实验</a></li><li><a href="#任务评估与训练数据">任务评估与训练数据</a></li><li><a href="#一些闲话">一些闲话</a></li><li><a href="#参考">参考</a></li></ol></nav></aside></div><div class="article-end"><a class="text-link" href="/technology/">返回技术笔记 →</a></div></main><footer class="site-footer wrap"><div><a class="footer-brand" href="/">Coisini</a><a class="footer-note" href="/archive/">文章归档</a></div><div class="footer-right"><span>© 2026 Coisini</span><a href="/rss.xml" aria-label="订阅 RSS" title="订阅 RSS"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="19" r="1"></circle><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"></path></svg></a><a href="https://github.com/coisini233333333" target="_blank" rel="noopener noreferrer" aria-label="访问 GitHub" title="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4 1-4-2-6-2m12 5v-3.9c0-1.1-.4-1.8-.8-2.2 2.8-.3 5.8-1.4 5.8-6.3 0-1.4-.5-2.5-1.3-3.4.1-.4.6-1.7-.1-3.4 0 0-1.1-.4-3.6 1.3a12.5 12.5 0 0 0-6 0C6.5 2.4 5.4 2.8 5.4 2.8c-.7 1.7-.2 3-.1 3.4C4.5 7.1 4 8.2 4 9.6c0 4.9 3 6 5.8 6.3-.4.4-.8 1.2-.8 2.2V22"></path></svg></a></div></footer><script type="module">var e=document.querySelector(`[data-theme-toggle]`),t=()=>{let t=document.documentElement.dataset.theme===`dark`;e?.setAttribute(`aria-label`,t?`切换到浅色主题`:`切换到深色主题`),e?.setAttribute(`title`,t?`切换到浅色主题`:`切换到深色主题`),document.querySelector(`meta[name="theme-color"]`)?.setAttribute(`content`,t?`#171f1b`:`#f7f7ef`)};t(),e?.addEventListener(`click`,()=>{let e=document.documentElement.dataset.theme===`dark`?`light`:`dark`;document.documentElement.dataset.theme=e;try{localStorage.setItem(`theme`,e)}catch{}t()});</script></body></html>
+</article><aside class="article-toc"><nav aria-label="文章目录"><p>目录</p><ol><li><a href="#项目方向">项目方向</a></li><li><a href="#从理解屏幕到动作执行">从理解屏幕到动作执行</a></li><li><a href="#任务评估">任务评估</a></li><li><a href="#一些闲话">一些闲话</a></li><li><a href="#参考">参考</a></li></ol></nav></aside></div><div class="article-end"><a class="text-link" href="/technology/">返回技术笔记 →</a></div></main><footer class="site-footer wrap"><div><a class="footer-brand" href="/">Coisini</a><a class="footer-note" href="/archive/">文章归档</a></div><div class="footer-right"><span>© 2026 Coisini</span><a href="/rss.xml" aria-label="订阅 RSS" title="订阅 RSS"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="19" r="1"></circle><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"></path></svg></a><a href="https://github.com/coisini233333333" target="_blank" rel="noopener noreferrer" aria-label="访问 GitHub" title="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4 1-4-2-6-2m12 5v-3.9c0-1.1-.4-1.8-.8-2.2 2.8-.3 5.8-1.4 5.8-6.3 0-1.4-.5-2.5-1.3-3.4.1-.4.6-1.7-.1-3.4 0 0-1.1-.4-3.6 1.3a12.5 12.5 0 0 0-6 0C6.5 2.4 5.4 2.8 5.4 2.8c-.7 1.7-.2 3-.1 3.4C4.5 7.1 4 8.2 4 9.6c0 4.9 3 6 5.8 6.3-.4.4-.8 1.2-.8 2.2V22"></path></svg></a></div></footer><script type="module">var e=document.querySelector(`[data-theme-toggle]`),t=()=>{let t=document.documentElement.dataset.theme===`dark`;e?.setAttribute(`aria-label`,t?`切换到浅色主题`:`切换到深色主题`),e?.setAttribute(`title`,t?`切换到浅色主题`:`切换到深色主题`),document.querySelector(`meta[name="theme-color"]`)?.setAttribute(`content`,t?`#171f1b`:`#f7f7ef`)};t(),e?.addEventListener(`click`,()=>{let e=document.documentElement.dataset.theme===`dark`?`light`:`dark`;document.documentElement.dataset.theme=e;try{localStorage.setItem(`theme`,e)}catch{}t()});</script></body></html>
