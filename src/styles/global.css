@@ -1,27 +1,27 @@
-/* 浅米白与灰绿主题：颜色变量集中在顶部，栏目布局保持独立。 */
+/* 雪山隐寺：霜白、冰蓝与墨青；保留既有栏目布局。 */
 :root {
-  --bg: #f7f7ef;
-  --surface: #fdfdf8;
-  --ink: #283e34;
-  --muted: #6e786c;
-  --accent: #315c46;
-  --accent-soft: #e9eddf;
-  --line: #dce0d2;
-  --warm: #ebe4d3;
+  --bg: #eff4f7;
+  --surface: #f8fbfd;
+  --ink: #233d50;
+  --muted: #607687;
+  --accent: #345f7a;
+  --accent-soft: #dfeaf1;
+  --line: #cbd9e2;
+  --warm: #e0e9ef;
   --serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'STSong', 'SimSun', Georgia, serif;
   --sans: 'Inter', 'Noto Sans SC', 'Microsoft YaHei', system-ui, sans-serif;
   --page-width: 1120px;
   color-scheme: light;
 }
 :root[data-theme='dark'] {
-  --bg: #171f1b;
-  --surface: #202b24;
-  --ink: #e3e9dd;
-  --muted: #a1af9e;
-  --accent: #b4caa2;
-  --accent-soft: #2b3b2f;
-  --line: #374638;
-  --warm: #34392c;
+  --bg: #101d2b;
+  --surface: #17293a;
+  --ink: #e0eaf0;
+  --muted: #a0b5c5;
+  --accent: #a6cde3;
+  --accent-soft: #223c50;
+  --line: #30495d;
+  --warm: #24394a;
   color-scheme: dark;
 }
 * {
@@ -327,7 +327,7 @@ p {
 }
 .primary:hover {
   background: var(--accent);
-  box-shadow: 0 4px 12px #1e352218;
+  box-shadow: 0 4px 12px #16395320;
 }
 .secondary {
   background: transparent;
@@ -434,8 +434,8 @@ p {
   font-size: 9px;
   letter-spacing: 0.5px;
   padding: 2px 9px;
-  color: #344739;
-  background: #fcfaf0e8;
+  color: #28465b;
+  background: #f0f7fbe8;
   border-radius: 20px;
 }
 .post-card-body {
@@ -1431,4 +1431,58 @@ main > .about-layout {
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* 雪山主题：宣纸留白、冷雾与画轴边框。 */
+body {
+  isolation: isolate;
+  background-image: radial-gradient(ellipse at 88% 8%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 48%),
+    linear-gradient(150deg, transparent 65%, color-mix(in srgb, var(--accent-soft) 38%, transparent));
+  background-attachment: fixed;
+}
+.mountain-mist {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: .58;
+}
+.mountain-mist img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left bottom;
+  filter: blur(1px) saturate(.72);
+}
+.mountain-mist::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 58% 55%, var(--bg) 1%, transparent 78%),
+    linear-gradient(180deg, transparent 0%, transparent 50%, var(--bg) 100%);
+}
+:root[data-theme='dark'] .mountain-mist { opacity: .22; }
+@media (max-width: 760px) { .mountain-mist { opacity: .42; } }
+body::before { opacity: .035; background-size: 4px 4px; }
+.brand-symbol { border-radius: 3px; background: var(--accent); border: 1px solid color-mix(in srgb, var(--bg) 25%, var(--accent)); }
+.hero h1 { letter-spacing: 4px; }
+.hero-visual::before, .hero-visual::after {
+  content: ''; position: absolute; width: 48px; height: 48px; pointer-events: none;
+  border-color: var(--accent); border-style: solid; opacity: .4; z-index: 1;
+}
+.hero-visual::before { left: -7px; top: -7px; border-width: 1px 0 0 1px; }
+.hero-visual::after { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.image-mat { padding: 10px; border-radius: 3px; background: var(--surface); box-shadow: 0 18px 50px color-mix(in srgb, var(--ink) 9%, transparent); }
+.image-mat img { height: auto; aspect-ratio: 4 / 5; border-radius: 1px; object-position: 50% 50%; }
+:root[data-theme='dark'] .image-mat img { filter: brightness(.8) saturate(.8); }
+.project-card { background: color-mix(in srgb, var(--surface) 88%, transparent); border-radius: 3px; box-shadow: 0 5px 22px color-mix(in srgb, var(--ink) 3%, transparent); }
+.project-card h3, .page-heading h1 { font-family: var(--serif); }
+.project-status { border-radius: 2px; }
+.post-card { border-radius: 3px; }
+:root[data-theme='dark'] .post-art { filter: brightness(.78) saturate(.8); }
+@media (max-width: 760px) {
+  .image-mat { border-radius: 3px; }
+  .image-mat img { border-radius: 1px; }
 }
